@@ -61,17 +61,17 @@ main li img {
   margin: 0;
 }
 
-.action {
+.actions {
   text-align: right;
 }
 
-.action a {
+.actions a {
   text-decoration: none;
   padding: 6px;
   color: rgb(22, 211, 228);
   border-radius: 5px;
 }
 
-.action a:hover {
+.actions a:hover {
   background-color: rgb(235, 253, 255);
 }
