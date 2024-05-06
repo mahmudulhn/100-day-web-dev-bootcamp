@@ -1,5 +1,6 @@
 [
     {
+        "id": "r1",
         "name": "Test",
         "address": "Some Street 5, Some City",
         "cuisine": "Test cuisine",
@@ -7,6 +8,7 @@
         "description": "its a test"
     },
     {
+        "id": "r2",
         "name": "Test 2",
         "address": "Test address",
         "cuisine": "Test cuisine",
