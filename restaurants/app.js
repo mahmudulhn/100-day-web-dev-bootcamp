@@ -2,6 +2,7 @@ const path = require('path');
 
 const express = require('express');
 
+const defaultRoutes = require('./routes/default');
 const restaurantRoutes = require('./routes/restaurants');
 
 const app = express();
@@ -16,11 +17,11 @@ app.use('/', defaultRoutes);
 app.use('/', restaurantRoutes);
 
 app.use(function (req, res) {
-  res.status(404).render('404');
+    res.status(404).render('404');
 });
 
 app.use(function (error, req, res, next) {
-  res.status(500).render('500');
+    res.status(500).render('500');
 });
 
 app.listen(3000);
