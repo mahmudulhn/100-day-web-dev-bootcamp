@@ -1,4 +1,7 @@
 /* All posts page */
+* {
+  list-style: none;
+}
 
 #all-posts {
   text-align: center;
