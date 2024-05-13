@@ -19,7 +19,7 @@ router.get('/login', function (req, res) {
 
 router.post('/signup', async function (req, res) {
   const userData = req.body;
-  const enteredEmail = userData.email;
+  const enteredEmail = userData.email; // userData['email']
   const enteredConfirmEmail = userData['confirm-email'];
   const enteredPassword = userData.password;
 
@@ -27,7 +27,7 @@ router.post('/signup', async function (req, res) {
     !enteredEmail ||
     !enteredConfirmEmail ||
     !enteredPassword ||
-    enteredPassword.trim() < 6 ||
+    enteredPassword.trim().length < 6 ||
     enteredEmail !== enteredConfirmEmail ||
     !enteredEmail.includes('@')
   ) {
@@ -41,7 +41,7 @@ router.post('/signup', async function (req, res) {
     .findOne({ email: enteredEmail });
 
   if (existingUser) {
-    console.log('User Exist');
+    console.log('User exists already');
     return res.redirect('/signup');
   }
 
@@ -50,7 +50,7 @@ router.post('/signup', async function (req, res) {
   const user = {
     email: enteredEmail,
     password: hashedPassword,
-  }
+  };
 
   await db.getDb().collection('users').insertOne(user);
 
@@ -68,26 +68,34 @@ router.post('/login', async function (req, res) {
     .findOne({ email: enteredEmail });
 
   if (!existingUser) {
-    console.log('Could not log in');
+    console.log('Could not log in!');
     return res.redirect('/login');
   }
 
-  const passwordAreEqual = await bcrypt.compare(enteredPassword, existingUser.password)
+  const passwordsAreEqual = await bcrypt.compare(
+    enteredPassword,
+    existingUser.password
+  );
 
-  if (!passwordAreEqual) {
-    console.log('Could not log in - passwords are not equal');
+  if (!passwordsAreEqual) {
+    console.log('Could not log in - passwords are not equal!');
     return res.redirect('/login');
   }
 
-  console.log('User is authenticated!');
-  res.redirect('/admin');
-
+  req.session.user = { id: existingUser._id, email: existingUser.email };
+  req.session.isAuthenticated = true;
+  req.session.save(function () {
+    res.redirect('/admin');
+  });
 });
 
 router.get('/admin', function (req, res) {
+  if (!req.session.isAuthenticated) { // if (!req.session.user)
+    return res.status(401).render('401');
+  }
   res.render('admin');
 });
 
-router.post('/logout', function (req, res) { });
+router.post('/logout', function (req, res) {});
 
 module.exports = router;
